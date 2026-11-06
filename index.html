@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sebuah Ruang Kecil & Cerita yang Singgah</title>
+    <!-- Google Fonts: Playfair Display for cinematic feel & Poppins for modern reading -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #141414;
+            color: #dcdcdc;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        .card-container {
+            width: 100%;
+            max-width: 520px;
+            background: #1f1f1f;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+        }
+        .section {
+            display: none;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: left;
+        }
+        .section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Model 1: Media Box Full Banner di Bagian Atas (Login s.d. Part 4) */
+        .media-box {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            background: #2a2a2a;
+            position: relative;
+            border-bottom: 2px solid rgba(212, 163, 115, 0.3);
+        }
+        .media-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Model 2: Background Foto Penuh khusus Part 5 */
+        .section-bg {
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .bg-overlay {
+            background: rgba(20, 20, 20, 0.90);
+            padding: 40px 30px;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Padding untuk konten teks di bawah banner */
+        .content-body {
+            padding: 30px 25px;
+            text-align: center;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            color: #fefae0;
+            margin-bottom: 18px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+        p {
+            font-size: 14.5px;
+            line-height: 1.8;
+            color: #b8b8b8;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .highlight-quote {
+            font-style: italic;
+            color: #dda15e;
+            text-align: center;
+            display: block;
+            margin: 20px 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 15.5px;
+            background: rgba(221, 161, 94, 0.08);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 3px solid #dda15e;
+        }
+        
+        /* Form Login & Input Styling */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: #dda15e;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(42, 42, 42, 0.9);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s;
+        }
+        .form-control:focus {
+            border-color: #dda15e;
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 90px;
+        }
+        .error-msg {
+            color: #e76f51;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+            text-align: left;
+        }
+
+        .btn {
+            background-color: #dda15e;
+            color: #141414;
+            border: none;
+            padding: 13px 30px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(221, 161, 94, 0.3);
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #bc6c25;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Indicator dots */
+        .steps-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            padding: 15px 0;
+            background: #1f1f1f;
+        }
+        .dot {
+            width: 6px;
+            height: 6px;
+            background: #333;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+        .dot.active {
+            width: 22px;
+            border-radius: 4px;
+            background: #dda15e;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(221, 161, 94, 0.15);
+            color: #dda15e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Audio Backsound -->
+    <audio id="bgMusic" loop>
+        <source src="lagu.mp3" type="audio/mpeg">
+        Browser lu tidak mendukung pemutar audio ini.
+    </audio>
+
+    <div class="card-container">
+        
+        <!-- HALAMAN LOGIN (Model Banner Atas) -->
+        <div class="section active" id="sec-1">
+            <div class="media-box">
+                <img src="cover.jpe" alt="Login Banner" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80'">
+            </div>
+            <div class="content-body">
+                <span class="badge">Sebuah Cerita Kecil</span>
+                <h2>Login Dulu Nyakkk</h2>
+                <p style="text-align: center; font-size: 13.5px; margin-bottom: 20px;">Silakan masukin nama lengkapnya dan sandinya bebas untuk membuka halaman ini.</p>
+                
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="loginName" class="form-control" placeholder="Contoh: Tuan Putri">
+                    <div class="error-msg" id="nameError">Masukkan yang bener ngapa.</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Kata Sandi</label>
+                    <input type="password" id="loginPass" class="form-control" placeholder="Contoh: Yang buat web cakep:v">
+                    <div class="error-msg" id="passError">Sandi tidak boleh kosong.</div>
+                </div>
+
+                <button class="btn" onclick="handleLogin()">Masuk & Mulai 🎵</button>
+            </div>
+        </div>
+
+        <!-- INTRO / PEMBUKA CERITA (Model Banner Atas) -->
+        <div class="section" id="sec-2">
+            <div class="media-box">
+                <img src="intro.jpg" alt="Intro Banner" onerror="this.src='https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=600&q=80'">
+            </div>
+            <div class="content-body">
+                <span class="badge">Kata Pembuka</span>
+                <h2 style="text-align: center;">Sebuah Ruang Kecil & Cerita yang Singgah</h2>
+                <p style="text-align: center;">“Haii… at the time gua pernah bilang buat bikin web buat lu. Dan yahh, akhirnya gua tepatin janji itu, hari ini gua selesai bikin web ini khusus buat lu.</p>
+                <p style="text-align: center;">But, disini gua disclaimer dulu, gua belum terampil bikin kayak gini. Dan ini adalah first-nya gua buat bikinin orang web khusus. Jadi, maaf yaa kalau kurang memuaskan dan narasi nya yang kurang baik. Enjoyy 😊”</p>
+                <div style="text-align: center;"><button class="btn" style="width: auto; padding: 13px 30px;" onclick="nextSection(3)">Lanjut Baca</button></div>
+            </div>
+        </div>
+
+        <!-- PART 1: ABOUT YOU (Model Banner Atas) -->
+        <div class="section" id="sec-3">
+            <div class="media-box">
+                <img src="part1.jpeg" alt="Adelia Putri" onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80'">
+            </div>
+            <div class="content-body">
+                <span class="badge">Part 1</span>
+                <h2 style="text-align: center;">About You</h2>
+                <p>Adelia Putri, nama yang sangat bagus, bahkan memiliki arti ‘Anak Perempuan yang mulia’ atau kalau dalam Bahasa Jerman itu mencerminkan seorang putri dari bangsawan.</p>
+                <p>Dia memiliki pribadi yang baik, lembut, pinter, ramah, lucu, cantik, manis yaa pokoknya gitu deh, kalau disebut disini kepanjangan hehehe… Dia juga asik banget dah orangnya apalagi kalau diajak discuss beuhhhh. Bisa jadi seorang pekerja keras dan independent itu adalah suatu kebanggaan menurut gua. Proud of you…</p>
+                <p>Kadang, sifat lucu yang gua suka adalah ketika ada orang yang cuma ngasih info ke lu setengah-setengah wkwk. Suka lucu lihatnya kalau pas lagi penasaran, makanya gua selalu bilang ke orang yang emang mau ngasih info atau apapun ke lu: <em>“Dia jangan dikasih setengah-setengah, kalau engga lu bakal dikecer abis-habisan ama dia wkwk.”</em></p>
+                <p>Tapi, Entah kenapa lu semenarik dan seperfect itu dimata gua, vibe nya selalu bawa hal hal yang supportif dan positif kalii laa. Sebenarnya masih banyak hal yang pengen banget diketahui biar bisa ngenal lu, semua hal mau itu baik ataupun buruk. Karena, pengen memahami segalanya siii hehe wkwk.</p>
+                <div style="text-align: center;"><button class="btn" style="width: auto; padding: 13px 30px;" onclick="nextSection(4)">Lanjut...</button></div>
+            </div>
+        </div>
+
+        <!-- PART 2: LHO KOK BISA? (Model Banner Atas) -->
+        <div class="section" id="sec-4">
+            <div class="media-box">
+                <img src="part2.jpe" alt="Part 2 Banner" onerror="this.src='https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80'">
+            </div>
+            <div class="content-body">
+                <span class="badge">Part 2</span>
+                <h2 style="text-align: center;">Lho Kok Bisa?</h2>
+                <p>Pertama kali gua mendengar nama ‘Adelia’ pas Fawaz manggil nama itu ketika lagi bareng gua ngopi di warung si ibu di kampus A Cibinong pada saat rapat gabungan antara panitia Kampus A dan Kampus B. Waktu itu mungkin terdengar asing karena nama itu pertama kali gua dengar.</p>
+                <p>Singkat cerita sampai pada hari H di mana acara penerimaan mahasiswa baru digelar, gua nggak kepikiran kalau nanti gua bisa akrab dengan beberapa panitia yang belum gua kenal. Tapi di hari itu entah gimana skenarionya, momen di mana gua bisa ngobrol sama lu muncul pas lagi hectic-nya masalah almet hahaha. Walaupun ini hanya beberapa kalimat yang keliatannya so asik, tapi itu awal mulanya.</p>
+                <p>Sampai ada momen istirahat di mana posisi duduk gua persis di samping lu. Gua bingung mau ngomong apa, tapi akhirnya kenalan, mutual IG, bisa bercanda bareng dan lainnya. Di situ gua mikir: <em>“Kok asik banget yaa, gua kira bakal awkward gitu ternyata engga.”</em></p>
+                <p>Sampai keakraban itu berujung di chaos-nya setelah acara wkwk. Lu mengeluarkan skill tenaga kesehatan itu yang bikin gua kek: <em>“What?? Damn ga tuuu wkwk”</em> sampe gua harus temenin nakes ini yang motornya ada di ujung kegelapan wkwk.</p>
+                <p>Setelah itu jujur nggak ada kepikiran emang nanti masih bisa ngobrol lagi? Apa nanti bisa ketemu lagi? Who knows yang gua nggak expect adalah malam itu lu save kontak gua, dan pas itu gua kaget, gua kira cuman mutualan IG terus yaudah aja, ternyata bisa kontekan akhirnya. Gua seneng kaliii laaa xixixi…..</p>
+                <p>Dari awal gua sama lu chattingan, gua awalnya menganggap semua biasa aja, semua berjalan selayaknya teman aja. Tapi entah seiring berjalannya waktu, tiap hari chattingan, waktu demi waktu gua ngerasa ada yang beda. Gua mulai ngerasa nyaman karena ada lu. Baru aja gua dapet perhatian gini, bahkan di hal-hal kecil pun tetep support dan itu yang bikin gua bangkit dan gua punya harapan buat ngelanjutin hidup wkwk. Agak aneh mungkin tapi kenyataannya gitu.</p>
+                <p>Lho kok bisa? Gua pikir ini cuman sesaat aja, namun ini terus melekat. Gua sempet mikir kok gua bisa suka ya? Gua nggak punya alasan pasti, tapi yang jelas gua suka semua tentang lu walaupun pasti yaa semua orang hanya munculin sisi baiknya. Kayak yang lu bilang: <em>“Mungkin lu hanya interest sesaat dan itupun baiknya.”</em></p>
+                <p>But, gua pengen tau segalanya tentang lu, gua nggak mau hanya suka baiknya aja. Karena dari dulu pun, kalau gua suka sama orang gua selalu sukain baik dan buruknya, karena gua juga manusia punya sisi baik dan buruk. Kalau gua mau diterima sama orang maka gua harus bisa nerima semua yang orang punya juga. Jadi begitu deh xixi…..</p>
+                <div style="text-align: center;"><button class="btn" style="width: auto; padding: 13px 30px;" onclick="nextSection(5)">Selanjutnya</button></div>
+            </div>
+        </div>
+
+        <!-- PART 3: WAKTU YANG SALAH & TAMAN BUNGA (Model Banner Atas) -->
+        <div class="section" id="sec-5">
+            <div class="media-box">
+                <img src="part3.jpe" alt="Part 3 Banner" onerror="this.src='https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=600&q=80'">
+            </div>
+            <div class="content-body">
+                <span class="badge">Part 3</span>
+                <h2 style="text-align: center;">Waktu yang Salah</h2>
+                <p>Setelah gua tahu pada akhirnya itu nggak akan berbalik, gua nggak kecewa kok. Karena gua tahu posisi gua, gua sadar akan diri gua jadi gua nggak berharap lebih banyak, soalnya kan rasa kecewa itu timbul dari harapan lebih yakann? wkwk.</p>
+                <p>Jadi, jangan pernah klaim nanti kedepannya kalau lu nya yang jahat atau yang salah yaa Adell 😊. Kayak yang lu sampein waktu itu takutnya ada klaim gitu kesannya. Karena mungkin gua datang di waktu yang salah aja, mungkin karena keadaan dan momennya yang belum tepat. Karena even gua ataupun lu pasti punya trauma masing-masing dan yang akan selalu aware ketika ada orang datang karena nggak mau kejadian atau luka yang sama terulang kembali.</p>
+                <p>Maka dari itu, gua nggak berharap sepenuhnya. Gua ngungkapin itu karena gua waktu itu mikirnya siapa tahu punya perasaan yang sama, namun ternyata engga dan it’s okay xixi…..</p>
+                <span class="highlight-quote">“Ibarat kita jalan ke sebuah taman bunga dan melihat bunga paling indah di taman itu... kalau kita terlalu egois ingin mencabut dan memilikinya, ia malah akan layu dan mati. Cukup mengaguminya dari jauh itu akan membuat bunganya akan terus tumbuh dan mekar dengan indah.”</span>
+                <div style="text-align: center;"><button class="btn" style="width: auto; padding: 13px 30px;" onclick="nextSection(6)">Berikutnya</button></div>
+            </div>
+        </div>
+
+        <!-- PART 4: BIG THANKS FOR U (Model Banner Atas) -->
+        <div class="section" id="sec-6">
+            <div class="media-box">
+                <img src="part4.jpe" alt="Part 4 Banner" onerror="this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80'">
+            </div>
+            <div class="content-body">
+                <span class="badge">Part 4</span>
+                <h2 style="text-align: center;">Big Thanks For U</h2>
+                <p>Gua mau sampein rasa terima kasih sama lu. Dengan lu, gua punya alasan buat improve, gua punya alasan buat bangkit dari diri gua.</p>
+                <p>Thanks juga karena selalu support gua, selalu ngasih hal-hal baik ke gua yang di mana dari semua hal itu akhirnya gua ngerasa gua diperhatiin.</p>
+                <p>Makasih jugaa lu selalu mau denger semua cerita gua tanpa adanya judgement dan ilfeel. Sampai di tahap gua cuman bisa sebatas mengagumi aja itu di tahap kebahagiaan yang indah menurut gua. Karena sesuai banget apa yang dibilang Zein, gua sebahagia dan seseneng serta sebersyukur itu ketemu lu xixi….. Big Thanks For U, Adelia Putri.</p>
+                <div style="text-align: center;"><button class="btn" style="width: auto; padding: 13px 30px;" onclick="nextSection(7)">Terakhir...</button></div>
+            </div>
+        </div>
+
+        <!-- PART 5: HARAPAN, DOA & FORM PESAN KE WHATSAPP (Model Background Foto Penuh) -->
+        <div class="section section-bg" id="sec-7" style="background-image: url('part5.jpeg');">
+            <div class="bg-overlay">
+                <span class="badge">Part 5</span>
+                <h2>Secercah Harapan & Do’a</h2>
+                <p>Layaknya semua harapan... semoga lu selalu ngelakuin hal-hal baik dan bermanfaat kedepannya dan terus menerus.</p>
+                <p>Jangan pernah nyerah sama hal apapun yang lu alamin yaa.. ingat, lu nggak sendiri, banyak orang-orang yang sayang dan peduli sama lu. Ingat juga harus tetep peduli dan sayang sama diri sendiri nyakkkk. Ceritalah ke orang-orang yang paling lu percaya.</p>
+                <p>Semoga lu menemukan dan mendapatkan apa yang lu mau. Semoga toko hijab yang lu tempuh ini jadi makin maju dan besar yaa… I will see it 😊</p>
+                <p style="text-align: center; font-style: italic; color: #dda15e; margin-top: 15px;">Ini last kali yaa wkwk</p>
+                <p style="text-align: center;">“Kalau suatu saat nanti, lu jalan dan mau nengok ke belakang, coba perhatiin dengan detail, itu pasti ada gua yang selalu nungguin lu. But, kalau pas lu nengoknya ternyata udah jalannya berdua berarti nanti gua bakal jadi orang yang ngucapin <em>‘Berbahagialah dan Bersenanglah selalu.’</em> hehe”</p>
+                
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.15); margin: 25px 0;">
+
+                <h3 style="font-size: 16px; color: #fefae0; margin-bottom: 12px; font-family: 'Playfair Display', serif; text-align: center;">Tinggalkan Pesan & Kesan ✨</h3>
+                <p style="font-size: 13px; margin-bottom: 15px; text-align: center;">Kali aja ada jawaban atau pesan atau kesan setelah baca ini? Tulis di sini, dan kirim langsung ke WhatsApp gua ya!</p>
+
+                <div class="form-group">
+                    <label>Jawban atau Pesan & Kesan dari Lu</label>
+                    <textarea id="userMessage" class="form-control" placeholder="Tulis pesan atau kesannya di sini..."></textarea>
+                </div>
+
+                <button class="btn" onclick="sendToWhatsApp()">Kirim ke WhatsApp 💬</button>
+            </div>
+        </div>
+
+        <!-- Indikator Slide -->
+        <div class="steps-indicator" id="indicator">
+            <div class="dot active" id="dot-1"></div>
+            <div class="dot" id="dot-2"></div>
+            <div class="dot" id="dot-3"></div>
+            <div class="dot" id="dot-4"></div>
+            <div class="dot" id="dot-5"></div>
+            <div class="dot" id="dot-6"></div>
+            <div class="dot" id="dot-7"></div>
+        </div>
+
+    </div>
+
+    <script>
+        function handleLogin() {
+            const nameInput = document.getElementById('loginName').value.trim();
+            const passInput = document.getElementById('loginPass').value.trim();
+            
+            let isValid = true;
+
+            if (nameInput === "") {
+                document.getElementById('nameError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('nameError').style.display = 'none';
+            }
+
+            if (passInput === "") {
+                document.getElementById('passError').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('passError').style.display = 'none';
+            }
+
+            if (isValid) {
+                const music = document.getElementById('bgMusic');
+                music.play().catch(e => console.log("Audio autoplay prevented:", e));
+                nextSection(2);
+            }
+        }
+
+        function nextSection(sectionNum) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            
+            document.getElementById('sec-' + sectionNum).classList.add('active');
+
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, index) => {
+                if (index + 1 === sectionNum) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function sendToWhatsApp() {
+            const msg = document.getElementById('userMessage').value.trim();
+            if (msg === "") {
+                alert("Tulis dulu jawaban atau pesan dan kesannya ya sebelum dikirim! 😊");
+                return;
+            }
+
+            // Ganti nomor WhatsApp di bawah ini dengan nomor lu (format: 628xxxxxxxxxx tanpa tanda +)
+            const phoneNumber = "6289531501320"; 
+            
+            const encodedMessage = encodeURIComponent(`Halo, ini jawaban gua dit`);
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            window.open(whatsappURL, '_blank');
+        }
+    </script>
+
+</body>
+</html>
